@@ -93,7 +93,7 @@ do
       export SDKROOT="$DEVROOT/SDKs/$PLATFORM$SDK_VERSION.sdk"
       export CC="$CLANG"
       export CPP="$CLANG -E"
-      export CFLAGS="-arch $ARCH -pipe -no-cpp-precomp -isysroot $SDKROOT -target x86_64-apple-ios13.0-macabi -m$SDK_PLATFORM-version-min=$MIN_VERSION $EMBED_BITCODE"
+      export CFLAGS="-arch $ARCH -pipe -no-cpp-precomp -isysroot $SDKROOT -target x86_64-apple-ios15.0-macabi -m$SDK_PLATFORM-version-min=$MIN_VERSION $EMBED_BITCODE"
       export CPPFLAGS="-arch $ARCH -pipe -no-cpp-precomp -isysroot $SDKROOT -m$SDK_PLATFORM-version-min=$MIN_VERSION"
     fi
     if [[ $(./configure --help | grep -c -- --with-openssl) -eq 0 ]]; then
@@ -108,10 +108,10 @@ export HOST="$HOST"
 export CC="$CC"
 echo CRYPTO_BACKEND_OPTION = $CRYPTO_BACKEND_OPTION
 echo OPENSSLDIR = $OPENSSLDIR
-echo CFLAGS="-target x86_64-apple-ios13.0-macabi" ./configure --host=$HOST --prefix="$PLATFORM_OUT" --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-examples-build --without-libz $CRYPTO_BACKEND_OPTION --with-libssl-prefix=$TMPDIR/iSSH2/openssl-$LIBSSL_VERSION/MacOSX_$MIN_VERSION-x86_64/install --disable-shared --enable-static
+echo CFLAGS="-target x86_64-apple-ios15.0-macabi" ./configure --host=$HOST --prefix="$PLATFORM_OUT" --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-examples-build --without-libz $CRYPTO_BACKEND_OPTION --with-libssl-prefix=$TMPDIR/iSSH2/openssl-$LIBSSL_VERSION/MacOSX_$MIN_VERSION-x86_64/install --disable-shared --enable-static
 #bash
 
-     CFLAGS="-target x86_64-apple-ios13.0-macabi" ./configure --host=$HOST --prefix="$PLATFORM_OUT" --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-examples-build --without-libz $CRYPTO_BACKEND_OPTION --with-libssl-prefix=$TMPDIR/iSSH2/openssl-$LIBSSL_VERSION/MacOSX_$MIN_VERSION-x86_64/install --disable-shared --enable-static >> "$LOG" 2>&1
+     CFLAGS="-target x86_64-apple-ios15.0-macabi" ./configure --host=$HOST --prefix="$PLATFORM_OUT" --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-examples-build --without-libz $CRYPTO_BACKEND_OPTION --with-libssl-prefix=$TMPDIR/iSSH2/openssl-$LIBSSL_VERSION/MacOSX_$MIN_VERSION-x86_64/install --disable-shared --enable-static >> "$LOG" 2>&1
 
 # If you get a popup here to install the Command Line Developer Tools: install them and rerun the script
 #
@@ -119,7 +119,7 @@ echo CFLAGS="-target x86_64-apple-ios13.0-macabi" ./configure --host=$HOST --pre
 # Host type:        x86_64-apple-darwin
 # Install prefix:   /var/folders/ch/5g2lmkmn0ks617mw07xkc_q80000gn/T/iSSH2/libssh2-1.9.0/MacOSX_10.15-x86_64/install
 # Compiler:         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
-# Compiler flags:   -target x86_64-apple-ios13.0-macabi -DLIBSSH2_DARWIN
+# Compiler flags:   -target x86_64-apple-ios15.0-macabi -DLIBSSH2_DARWIN
 # Library types:    Shared=no, Static=yes
 # Crypto library:   OpenSSL (AES-CTR: yes)
 # Clear memory:     unsupported
@@ -129,9 +129,9 @@ echo CFLAGS="-target x86_64-apple-ios13.0-macabi" ./configure --host=$HOST --pre
 # zlib compression: no
 
 #    if [[ "$ARCH" != "x86_64" ]]; then
-#      perl -pi.bak -e "s/-miphoneos-version-min=10.15/-target $ARCH-apple-ios13.0-macabi -miphoneos-version-min=10.15/gi" src/Makefile
-#      perl -pi.bak -e "s/-miphoneos-version-min=10.15/-target $ARCH-apple-ios13.0-macabi -miphoneos-version-min=10.15/gi" tests/Makefile
-#      perl -pi.bak -e "s/-miphoneos-version-min=10.15/-target $ARCH-apple-ios13.0-macabi -miphoneos-version-min=10.15/gi" Makefile
+#      perl -pi.bak -e "s/-miphoneos-version-min=10.15/-target $ARCH-apple-ios15.0-macabi -miphoneos-version-min=10.15/gi" src/Makefile
+#      perl -pi.bak -e "s/-miphoneos-version-min=10.15/-target $ARCH-apple-ios15.0-macabi -miphoneos-version-min=10.15/gi" tests/Makefile
+#      perl -pi.bak -e "s/-miphoneos-version-min=10.15/-target $ARCH-apple-ios15.0-macabi -miphoneos-version-min=10.15/gi" Makefile
 #    fi
 #bash
     make >> "$LOG" 2>&1
