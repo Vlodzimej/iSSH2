@@ -188,10 +188,6 @@ if [[  "$SDK_PLATFORM" == "macosx" ]] || [[ "$SDK_PLATFORM" == "iphoneos" ]] || 
     if [[ "$SDK_PLATFORM" == "macosx" ]]; then
       if [[ -z "$ARCHS" ]]; then
         ARCHS="x86_64"
-
-        if [[ $(version "$XCODE_VERSION") < $(version "10.0") ]]; then
-          ARCHS="$ARCHS i386"
-        fi
       fi
     elif [[ "$SDK_PLATFORM" == "iphoneos" ]]; then
       if [[ -z "$ARCHS" ]]; then
@@ -209,12 +205,12 @@ if [[  "$SDK_PLATFORM" == "macosx" ]] || [[ "$SDK_PLATFORM" == "iphoneos" ]] || 
       ARCHS="$ARCHS x86_64"
 
       if [[ $(version "$MIN_VERSION") < $(version "10.0") ]]; then
-        ARCHS="$ARCHS i386"
+        ARCHS="$ARCHS"
       fi
     elif [[ "$SDK_PLATFORM" == "appletvos" ]]; then
       ARCHS="$ARCHS arm64 x86_64"
     elif [[ "$SDK_PLATFORM" == "watchos" ]]; then
-      ARCHS="$ARCHS i386 armv7k"
+      ARCHS="$ARCHS armv7k"
 
       if [[ $(version "$XCODE_VERSION") == $(version "10.0") ]] || [[ $(version "$XCODE_VERSION") > $(version "10.0") ]]; then
         ARCHS="$ARCHS arm64_32"

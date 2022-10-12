@@ -96,10 +96,6 @@ if [[  "$SDK_PLATFORM" == "macosx" ]] || [[ "$SDK_PLATFORM" == "iphoneos" ]] || 
     if [[ "$SDK_PLATFORM" == "macosx" ]]; then
       if [[ -z "$ARCHS" ]]; then
         ARCHS="x86_64"
-
-        if [[ $(version "$XCODE_VERSION") < $(version "10.0") ]]; then
-          ARCHS="$ARCHS i386"
-        fi
       fi
     elif [[ "$SDK_PLATFORM" == "iphoneos" ]]; then
       if [[ -z "$ARCHS" ]]; then
@@ -117,12 +113,12 @@ if [[  "$SDK_PLATFORM" == "macosx" ]] || [[ "$SDK_PLATFORM" == "iphoneos" ]] || 
       ARCHS="$ARCHS x86_64"
 
       if [[ $(version "$MIN_VERSION") < $(version "10.0") ]]; then
-        ARCHS="$ARCHS i386"
+        ARCHS="$ARCHS"
       fi
     elif [[ "$SDK_PLATFORM" == "appletvos" ]]; then
       ARCHS="$ARCHS arm64 x86_64"
     elif [[ "$SDK_PLATFORM" == "watchos" ]]; then
-      ARCHS="$ARCHS i386 armv7k"
+      ARCHS="$ARCHS armv7k"
 
       if [[ $(version "$XCODE_VERSION") == $(version "10.0") ]] || [[ $(version "$XCODE_VERSION") > $(version "10.0") ]]; then
         ARCHS="$ARCHS arm64_32"
@@ -211,38 +207,32 @@ lipo -create ${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/${OSX_SDK_PLATFORM}_${OSX_MI
 ${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-arm64/install/lib/libssh2.a \
 ${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-arm64e/install/lib/libssh2.a \
 ${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-armv7/install/lib/libssh2.a \
-${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-armv7s/install/lib/libssh2.a \
-${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneSimulator_$SDK_VERSION-i386/install/lib/libssh2.a -output ./libssh2_iphoneos/lib/libssh2.a
+${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-armv7s/install/lib/libssh2.a -output ./libssh2_iphoneos/lib/libssh2.a
 echo lipo -create \${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/${OSX_SDK_PLATFORM}_${OSX_MIN_VERSION}-x86_64/install/lib/libssh2.a \\
 echo \${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-arm64/install/lib/libssh2.a \\
 echo \${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-arm64e/install/lib/libssh2.a \\
 echo \${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-armv7/install/lib/libssh2.a \\
-echo \${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-armv7s/install/lib/libssh2.a \\
-echo \${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneSimulator_$SDK_VERSION-i386/install/lib/libssh2.a -output ./libssh2_iphoneos/lib/libssh2.a
+echo \${TMPDIR}iSSH2/libssh2-$LIBSSH_VERSION/iPhoneOS_$SDK_VERSION-armv7s/install/lib/libssh2.a -output ./libssh2_iphoneos/lib/libssh2.a
 lipo -info ./libssh2_iphoneos/lib/libssh2.a
 lipo -create ${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/${OSX_SDK_PLATFORM}_${OSX_MIN_VERSION}-x86_64/install/lib/libcrypto.a \
 ${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-arm64/libcrypto.a \
 ${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-arm64e/libcrypto.a \
 ${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7/libcrypto.a \
-${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7s/libcrypto.a \
-${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneSimulator_$SDK_VERSION-i386/libcrypto.a -output ./openssl_iphoneos/lib/libcrypto.a
+${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7s/libcrypto.a  -output ./openssl_iphoneos/lib/libcrypto.a
 echo lipo -create \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/${OSX_SDK_PLATFORM}_${OSX_MIN_VERSION}-x86_64/install/lib/libcrypto.a \\
 echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-arm64/libcrypto.a \\
 echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-arm64e/libcrypto.a \\
 echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7/libcrypto.a \\
-echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7s/libcrypto.a \\
-echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneSimulator_$SDK_VERSION-i386/libcrypto.a -output ./openssl_iphoneos/lib/libcrypto.a
+echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7s/libcrypto.a -output ./openssl_iphoneos/lib/libcrypto.a
 lipo -info ./openssl_iphoneos/lib/libcrypto.a
 lipo -create ${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/${OSX_SDK_PLATFORM}_${OSX_MIN_VERSION}-x86_64/install/lib/libssl.a \
 ${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-arm64/libssl.a \
 ${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-arm64e/libssl.a \
 ${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7/libssl.a \
-${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7s/libssl.a \
-${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneSimulator_$SDK_VERSION-i386/libssl.a -output ./openssl_iphoneos/lib/libssl.a
+${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7s/libssl.a -output ./openssl_iphoneos/lib/libssl.a
 echo lipo -create \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/${OSX_SDK_PLATFORM}_${OSX_MIN_VERSION}-x86_64/install/lib/libssl.a \\
 echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-arm64/libssl.a \\
 echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-arm64e/libssl.a \\
 echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7/libssl.a \\
-echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7s/libssl.a \\
-echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneSimulator_$SDK_VERSION-i386/libssl.a -output ./openssl_iphoneos/lib/libssl.a
+echo \${TMPDIR}iSSH2/openssl-$LIBSSL_VERSION/iPhoneOS_$SDK_VERSION-armv7s/libssl.a -output ./openssl_iphoneos/lib/libssl.a
 lipo -info ./openssl_iphoneos/lib/libssl.a
