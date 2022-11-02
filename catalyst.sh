@@ -187,7 +187,7 @@ echo
 set -e
 
 rm -rf $TMPDIR/iSSH2
-./iSSH2.sh --platform=iphoneos --min-version=8.0 --sdk-version=$SDK_VERSION
+./iSSH2.sh --platform=iphoneos --min-version=8.0 --sdk-version=$SDK_VERSION --archs="arm64 arm64e"
 rm -rf ./libssh2_iphoneos/lib
 rm -rf ./openssl_iphoneos/lib
 OSX_MIN_VERSION="10.15"
