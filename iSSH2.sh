@@ -60,7 +60,7 @@ getLibssh2Version () {
 
 getOpensslVersion () {
   if type git >/dev/null 2>&1; then
-    LIBSSL_VERSION=`git ls-remote --tags git://git.openssl.org/openssl.git | egrep "openssl-3\.0\.[1-9][0-9]$" | cut -f 2 -d - | sort -t - -r | head -n 1`
+    LIBSSL_VERSION=`git ls-remote --tags https://github.com//openssl/openssl.git | egrep "openssl-3\.0\.[1-9][0-9]$" | cut -f 2 -d - | sort -t - -r | head -n 1`
     LIBSSL_AUTO=true
   else
     >&2 echo "Install git to automatically get the latest OpenSSL version or use the --openssl argument"
