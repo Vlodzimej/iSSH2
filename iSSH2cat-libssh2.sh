@@ -43,21 +43,22 @@ set -e
 
 OSX_PLATFORM="macosx"
 OSX_VERSION=10.15
-OSX_PLATFORM="$(platformName "$OSX_PLATFORM" "x86_64")"
-OSX_PLATFORM_OUT="$LIBSSHDIR/${OSX_PLATFORM}_$OSX_VERSION-x86_64/install"
-OSX_LIPO_SSH2="$OSX_PLATFORM_OUT/lib/libssh2.a"
 
 echo "Building Libssh2 $LIBSSH_VERSION:"
 
 for ARCH in $ARCHS
 do
+  OSX_PLATFORM="$(platformName "$OSX_PLATFORM" "$ARCH")"
+  OSX_PLATFORM_OUT="$LIBSSHDIR/${OSX_PLATFORM}_$OSX_VERSION-$ARCH/install"
+  OSX_LIPO_SSH2="$OSX_PLATFORM_OUT/lib/libssh2.a"
+
   PLATFORM="$(platformName "$SDK_PLATFORM" "$ARCH")"
   OPENSSLDIR="$BASEPATH/openssl_$SDK_PLATFORM/"
   PLATFORM_SRC="$LIBSSHDIR/${PLATFORM}_$SDK_VERSION-$ARCH/src"
   PLATFORM_OUT="$LIBSSHDIR/${PLATFORM}_$SDK_VERSION-$ARCH/install"
   LIPO_SSH2="$LIPO_SSH2 $PLATFORM_OUT/lib/libssh2.a"
 
-  if [[ -f "$PLATFORM_OUT/lib/libssh2.a" ]] && [[ "$ARCH" != "x86_64" ]]; then
+  if [[ -f "$PLATFORM_OUT/lib/libssh2.a" ]] ; then
     echo "libssh2.a for $ARCH already exists in $PLATFORM_OUT/lib/"
   else
     rm -rf "$PLATFORM_SRC"
@@ -82,7 +83,7 @@ do
     export CFLAGS="-arch $ARCH -pipe -no-cpp-precomp -isysroot $SDKROOT -m$SDK_PLATFORM-version-min=$MIN_VERSION $EMBED_BITCODE"
     export CPPFLAGS="-arch $ARCH -pipe -no-cpp-precomp -isysroot $SDKROOT -m$SDK_PLATFORM-version-min=$MIN_VERSION"
 
-    if [[ "$ARCH" == "x86_64" ]] && [[ "$MIN_VERSION" == "10.15" ]]; then
+    if [[ "$MIN_VERSION" == "10.15" ]]; then
       SDK_PLATFORM="macosx"
       SDK_VERSION=`xcrun --sdk $SDK_PLATFORM --show-sdk-version`
       MIN_VERSION=10.15
@@ -93,7 +94,7 @@ do
       export SDKROOT="$DEVROOT/SDKs/$PLATFORM$SDK_VERSION.sdk"
       export CC="$CLANG"
       export CPP="$CLANG -E"
-      export CFLAGS="-arch $ARCH -pipe -no-cpp-precomp -isysroot $SDKROOT -target x86_64-apple-ios-macabi -m$SDK_PLATFORM-version-min=$MIN_VERSION $EMBED_BITCODE"
+      export CFLAGS="-arch $ARCH -pipe -no-cpp-precomp -isysroot $SDKROOT -target $ARCH-apple-ios-macabi -m$SDK_PLATFORM-version-min=$MIN_VERSION $EMBED_BITCODE"
       export CPPFLAGS="-arch $ARCH -pipe -no-cpp-precomp -isysroot $SDKROOT -m$SDK_PLATFORM-version-min=$MIN_VERSION"
     fi
     if [[ $(./configure --help | grep -c -- --with-openssl) -eq 0 ]]; then
@@ -108,10 +109,10 @@ export HOST="$HOST"
 export CC="$CC"
 echo CRYPTO_BACKEND_OPTION = $CRYPTO_BACKEND_OPTION
 echo OPENSSLDIR = $OPENSSLDIR
-echo CFLAGS="-target x86_64-apple-ios-macabi" ./configure --host=$HOST --prefix="$PLATFORM_OUT" --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-examples-build --without-libz $CRYPTO_BACKEND_OPTION --with-libssl-prefix=$TMPDIR/iSSH2/openssl-$LIBSSL_VERSION/MacOSX_$MIN_VERSION-x86_64/install --disable-shared --enable-static
+echo CFLAGS="-target $ARCH-apple-ios-macabi" ./configure --host=$HOST --prefix="$PLATFORM_OUT" --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-examples-build --without-libz $CRYPTO_BACKEND_OPTION --with-libssl-prefix=$TMPDIR/iSSH2/openssl-$LIBSSL_VERSION/MacOSX_$MIN_VERSION-$ARCH/install --disable-shared --enable-static
 #bash
 
-     CFLAGS="-target x86_64-apple-ios-macabi" ./configure --host=$HOST --prefix="$PLATFORM_OUT" --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-examples-build --without-libz $CRYPTO_BACKEND_OPTION --with-libssl-prefix=$TMPDIR/iSSH2/openssl-$LIBSSL_VERSION/MacOSX_$MIN_VERSION-x86_64/install --disable-shared --enable-static >> "$LOG" 2>&1
+     CFLAGS="-target x86_64-apple-ios-macabi" ./configure --host=$HOST --prefix="$PLATFORM_OUT" --disable-debug --disable-dependency-tracking --disable-silent-rules --disable-examples-build --without-libz $CRYPTO_BACKEND_OPTION --with-libssl-prefix=$TMPDIR/iSSH2/openssl-$LIBSSL_VERSION/MacOSX_$MIN_VERSION-$ARCH/install --disable-shared --enable-static >> "$LOG" 2>&1
 
 # If you get a popup here to install the Command Line Developer Tools: install them and rerun the script
 #
@@ -143,7 +144,7 @@ done
 
 find $PLATFORM_OUT -name libssh2.a
 
-if [[ -f "$OSX_LIPO_SSH2" ]] && [[ "$ARCH" != "x86_64" ]]; then
+if [[ -f "$OSX_LIPO_SSH2" ]] ; then
   echo "todo: lipo -create $OSX_LIPO_SSH2 $LIPO_SSH2 -output $BASEPATH/libssh2_$SDK_PLATFORM/lib/libssh2.a"
   touch "$BASEPATH/libssh2_$SDK_PLATFORM/lib/libssh2.a"
 else

@@ -202,7 +202,7 @@ if [[  "$SDK_PLATFORM" == "macosx" ]] || [[ "$SDK_PLATFORM" == "iphoneos" ]] || 
         fi
       fi
 
-      ARCHS="$ARCHS x86_64"
+      #ARCHS="$ARCHS x86_64"
 
       if [[ $(version "$MIN_VERSION") < $(version "10.0") ]]; then
         ARCHS="$ARCHS"
@@ -284,9 +284,9 @@ echo
 set -e
 
 if [[ $BUILD_SSL == true ]]; then
-  "$BASEPATH/iSSH2cat-openssl.sh" || echo "Never mind"
+  "$BASEPATH/iSSH2cat-openssl.sh"
 fi
 
 if [[ $BUILD_SSH == true ]]; then
-  "$BASEPATH/iSSH2cat-libssh2.sh" || echo "Never mind"
+  "$BASEPATH/iSSH2cat-libssh2.sh"
 fi

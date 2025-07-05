@@ -57,7 +57,7 @@ do
   LIPO_LIBSSL="$LIPO_LIBSSL $OPENSSLDIR/libssl.a"
   LIPO_LIBCRYPTO="$LIPO_LIBCRYPTO $OPENSSLDIR/libcrypto.a"
 
-  if [[ -f "$OPENSSLDIR/libssl.a" ]] && [[ -f "$OPENSSLDIR/libcrypto.a" ]] && [[ "$ARCH" != "x86_64" ]]; then
+  if [[ -f "$OPENSSLDIR/libssl.a" ]] && [[ -f "$OPENSSLDIR/libcrypto.a" ]] ; then
     echo "libssl.a and libcrypto.a for $ARCH already exist in $OPENSSLDIR"
   else
     rm -rf "$OPENSSLDIR"
@@ -67,8 +67,8 @@ do
     LOG="$OPENSSLDIR/build-openssl.log"
     touch $LOG
 
-    if [[ "$ARCH" == "x86_64" ]] && [[ "$MIN_VERSION" == "10.15" ]]; then
-      HOST="darwin64-x86_64-cc"
+    if [[ "$MIN_VERSION" == "10.15" ]]; then
+      HOST="darwin64-$ARCH-cc"
       SDK_PLATFORM="macosx"
       CONF="no-shared"
       SDK_VERSION=`xcrun --sdk $SDK_PLATFORM --show-sdk-version`
@@ -90,28 +90,30 @@ do
     CONF="$CONF -m$SDK_PLATFORM-version-min=$MIN_VERSION $EMBED_BITCODE"
     ./Configure $HOST --prefix=$PLATFORM_OUT $CONF
 
-    if [[ "$ARCH" == "x86_64" ]]; then
-      sed -ie "s!^CFLAG=!CFLAG=-isysroot $SDKROOT !" "Makefile"
-      if [[ "$MIN_VERSION" == "10.15" ]]; then
-        echo "Building OpenSSL $LIBSSL_VERSION $ARCH for $HOST, please wait..."
-      fi
+    sed -ie "s!^CFLAG=!CFLAG=-isysroot $SDKROOT !" "Makefile"
+    if [[ "$MIN_VERSION" == "10.15" ]]; then
+      echo "Building OpenSSL $LIBSSL_VERSION $ARCH for $HOST, please wait..."
     fi
     make depend >> "$LOG" 2>&1
     make -j "$BUILD_THREADS" build_libs >> "$LOG" 2>&1
-    if [[ "$ARCH" == "x86_64" ]] && [[ "$MIN_VERSION" == "10.15" ]]; then
+    if [[ "$MIN_VERSION" == "10.15" ]]; then
+      if [ -f $PLATFORM_OUT ]
+      then
+        rm -f $PLATFORM_OUT
+      fi
       mkdir -p $PLATFORM_OUT
       make install >> "$LOG" 2>&1
     fi
 #bash
-    if [[ "$ARCH" == "x86_64" ]] && [[ "$MIN_VERSION" == "10.15" ]]; then
-      SDK_PLATFORM="iphoneos"
+    if [[ "$MIN_VERSION" == "10.15" ]]; then
+      SDK_PLATFORM="macosx"
       echo "SDK_VERSION = $SDK_VERSION"
       SDK_VERSION="14.4"
       PLATFORM="$(platformName "$SDK_PLATFORM" "$ARCH")"
       OPENSSLDIR="$LIBSSLDIR/${PLATFORM}_$MIN_VERSION-$ARCH"
     fi
 
-    if [[ "$ARCH" == "x86_64" ]] && [[ "$MIN_VERSION" == "10.15" ]]; then
+    if [[ "$MIN_VERSION" == "10.15" ]]; then
       echo "- Mac Catalyst for $HOST $ARCH done!"
     else
       echo "- $PLATFORM $ARCH done!"
