@@ -37,13 +37,7 @@ mkdir -p "$LIBSSLDIR"
 
 LIBSSL_TAR="openssl-$LIBSSL_VERSION.tar.gz"
 
-v=$(echo $LIBSSL_VERSION | cut -c1-1)
-if [ "$v" -le "1" ]
-then
-  downloadFile "https://github.com/openssl/openssl/releases/download/OpenSSL_$(echo $LIBSSL_VERSION | sed 's/\./_/g')/$LIBSSL_TAR" "$LIBSSLDIR/$LIBSSL_TAR"
-else
-  downloadFile "https://github.com/openssl/openssl/releases/download/openssl-$LIBSSL_VERSION/$LIBSSL_TAR" "$LIBSSLDIR/$LIBSSL_TAR"
-fi
+downloadFile "https://github.com/openssl/openssl/releases/download/openssl-$LIBSSL_VERSION/$LIBSSL_TAR" "$LIBSSLDIR/$LIBSSL_TAR"
 
 LIBSSLSRC="$LIBSSLDIR/src/"
 mkdir -p "$LIBSSLSRC"
