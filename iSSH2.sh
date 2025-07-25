@@ -29,10 +29,10 @@ export SCRIPTNAME="iSSH2"
 
 cleanupFail () {
   if $1; then
-    >&2 echo "Build failed, cleaning up temporary files..."
+    echo "Build failed, cleaning up temporary files..."
     rm -rf "$LIBSSLDIR/src/" "$LIBSSLDIR/tmp/" "$LIBSSHDIR/src/" "$LIBSSHDIR/tmp/"
   else
-    >&2 echo "Build failed, temporary files location: $TEMPPATH"
+    echo "Build failed, temporary files location: $TEMPPATH"
   fi
   exit 1
 }
@@ -51,21 +51,19 @@ getLibssh2Version () {
     LIBSSH_VERSION=`git ls-remote --tags https://github.com/libssh2/libssh2.git | egrep "libssh2-[0-9]+\.[1-9][0-9](\.[0-9])*[a-zA-Z]?$" | cut -f 2 -d - | sort -t . -r | head -n 1`
     LIBSSH_AUTO=true
   else
-    >&2 echo "Install git to automatically get the latest Libssh2 version or use the --libssh2 argument"
-    >&2 echo
-    >&2 echo "Try '$SCRIPTNAME --help' for more information."
+    echo "Install git to automatically get the latest Libssh2 version or use the --libssh2 argument"
+    echo "Try '$SCRIPTNAME --help' for more information."
     exit 2
   fi
 }
 
 getOpensslVersion () {
   if type git >/dev/null 2>&1; then
-    LIBSSL_VERSION=`git ls-remote --tags https://github.com//openssl/openssl.git | egrep "openssl-3\.0\.[1-9][0-9]$" | cut -f 2 -d - | sort -t - -r | head -n 1`
+    LIBSSL_VERSION=`git ls-remote --tags https://github.com//openssl/openssl.git | egrep "openssl-3\.0\.([1-9][0-9])[a-zA-Z]?$" | cut -f 2 -d - | sort -t . -r | head -n 1`
     LIBSSL_AUTO=true
   else
-    >&2 echo "Install git to automatically get the latest OpenSSL version or use the --openssl argument"
-    >&2 echo
-    >&2 echo "Try '$SCRIPTNAME --help' for more information."
+    echo "Install git to automatically get the latest OpenSSL version or use the --openssl argument"
+    echo "Try '$SCRIPTNAME --help' for more information."
     exit 2
   fi
 }
@@ -177,23 +175,13 @@ if [[ ! -z "$XCODE_PROJECT" ]] && [[ ! -z "$TARGET_NAME" ]]; then
   TARGET_ARCHS=`getBuildSetting "$BUILD_SETTINGS" "VALID_ARCHS"`
 fi
 
-if [[ -z "$SDK_PLATFORM" ]]; then
-  >&2 echo "$SCRIPTNAME: Platform must be specified."
-  >&2 echo "Specify --platform=PLATFORM or --xcodeproj=PATH and --target=TARGET"
-  >&2 echo
-  >&2 echo "Run '$SCRIPTNAME --help' for more information."
-  exit 1
-fi
-
 if [[ -z "$MIN_VERSION" ]]; then
-  >&2 echo "$SCRIPTNAME: Minimum platform version must be specified."
-  >&2 echo "Specify --min-version=VERS or --xcodeproj=PATH and --target=TARGET"
-  >&2 echo
-  >&2 echo "Run '$SCRIPTNAME --help' for more information."
+  echo "$SCRIPTNAME: Minimum platform version must be specified."
+  echo "Run '$SCRIPTNAME --help' for more information."
   exit 1
 fi
 
-if [[  "$SDK_PLATFORM" == "macosx" ]] || [[ "$SDK_PLATFORM" == "iphoneos" ]] || [[ "$SDK_PLATFORM" == "iphonesimulator" ]] || [[ "$SDK_PLATFORM" == "appletvos" ]] || [[ "$SDK_PLATFORM" == "watchos" ]]; then
+if [[  "$SDK_PLATFORM" == "macosx" ]] || [[ "$SDK_PLATFORM" == "iphoneos" ]] || [[ "$SDK_PLATFORM" == "appletvos" ]] || [[ "$SDK_PLATFORM" == "watchos" ]]; then
   if [[ -z "$ARCHS" ]]; then
     ARCHS="$TARGET_ARCHS"
 
@@ -234,8 +222,8 @@ if [[  "$SDK_PLATFORM" == "macosx" ]] || [[ "$SDK_PLATFORM" == "iphoneos" ]] || 
     fi
   fi
 else
-  >&2 echo "$SCRIPTNAME: Unknown platform '$SDK_PLATFORM'"
-  >&2 echo "Run '$SCRIPTNAME --help' for more information."
+  echo "$SCRIPTNAME: Unknown platform '$SDK_PLATFORM'"
+  echo "Run '$SCRIPTNAME --help' for more information."
   exit 1
 fi
 
@@ -289,7 +277,6 @@ else
   echo "SDK version: $SDK_VERSION"
 fi
 
-echo "Xcode version: $XCODE_VERSION (Automatically detected)"
 echo "Architectures: $ARCHS"
 echo "Platform: $SDK_PLATFORM"
 echo "Platform min version: $MIN_VERSION"
